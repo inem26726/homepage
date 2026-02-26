@@ -1,0 +1,13 @@
+/* Custom Scrollbar */
+.overflow-x-auto::-webkit-scrollbar {
+    height: 6px;
+    -webkit-appearance: none;
+}
+.overflow-x-auto::-webkit-scrollbar-track {
+    background-color: rgba(0,0,0,0.05);
+    border-radius: 4px;
+}
+.overflow-x-auto::-webkit-scrollbar-thumb {
+    background-color: #D9A3B2;
+    border-radius: 4px;
+}

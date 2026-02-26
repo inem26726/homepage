@@ -1,0 +1,44 @@
+{
+  "JANUARI": {
+    "label": "25 Jan - 24 Feb",
+    "totalSpent": 1474300,
+    "sisa": 325700,
+    "budget": 1800000,
+    "percentSpent": "81.9",
+    "categories": [
+      {
+        "name": "Makan",
+        "value": 855800
+      },
+      {
+        "name": "Hiburan",
+        "value": 513500
+      },
+      {
+        "name": "Tabungan",
+        "value": 200000
+      },
+      {
+        "name": "Transportasi",
+        "value": 100000
+      },
+      {
+        "name": "Parkir",
+        "value": 5000
+      }
+    ]
+  },
+  "FEBRUARI": {
+    "label": "25 Feb - 24 Mar",
+    "totalSpent": 0,
+    "sisa": 1800000,
+    "budget": 1800000,
+    "percentSpent": "0.0",
+    "categories": [
+      {
+        "name": "Tabungan",
+        "value": 200000
+      }
+    ]
+  }
+}

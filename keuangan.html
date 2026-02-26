@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Keuangan - Agung & Rona</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind.config.js"></script>
+</head>
+<body class="bg-bg-gray text-text-dark font-sans antialiased min-h-screen flex flex-col md:flex-row">
+
+    <!-- Mobile Header -->
+    <div class="md:hidden flex items-center justify-between p-4 bg-white border-b border-gray-200 sticky top-0 z-20">
+        <div class="flex items-center gap-2 font-bold text-primary-dark">
+            <i class="ri-wallet-3-fill text-xl"></i> Keuangan
+        </div>
+        <button onclick="window.toggleSidebar()" class="p-2 text-text-dark hover:bg-gray-100 rounded-lg transition-colors">
+            <i class="ri-menu-line text-2xl"></i>
+        </button>
+    </div>
+
+    <!-- Sidebar Backdrop (Mobile Only) -->
+    <div id="sidebarBackdrop" onclick="window.toggleSidebar()" class="fixed inset-0 bg-black/50 z-30 hidden transition-opacity opacity-0 md:hidden"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 p-6 flex flex-col z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out md:sticky md:top-0 md:h-screen shadow-2xl md:shadow-none shrink-0">
+        <div class="flex items-center justify-between mb-10 text-primary-dark font-bold text-xl tracking-tight">
+            <div class="flex items-center gap-3">
+                <i class="ri-wallet-3-fill text-2xl"></i> Fin.Tracker
+            </div>
+            <!-- Close Button (Mobile) -->
+            <button onclick="window.toggleSidebar()" class="md:hidden text-text-light hover:text-text-dark">
+                <i class="ri-close-line text-2xl"></i>
+            </button>
+        </div>
+        
+        <nav class="space-y-1">
+            <a href="#" class="flex items-center gap-3 px-4 py-3 bg-pink-50 text-primary-dark rounded-xl font-medium transition-colors">
+                <i class="ri-dashboard-line"></i> Dashboard
+            </a>
+            <a href="https://docs.google.com/spreadsheets/d/1jZK8_aKh5C3xHjK4qaLnp7hXQmowKu2ZxlHKgC22xps/edit?usp=sharing" target="_blank" class="flex items-center gap-3 px-4 py-3 text-text-light hover:bg-gray-50 rounded-xl font-medium transition-colors">
+                <i class="ri-file-excel-2-line"></i> Spreadsheet
+            </a>
+        </nav>
+
+        <div class="mt-auto pt-6 border-t border-gray-100">
+             <div class="flex items-center gap-3 px-4 py-3 text-text-light text-sm">
+                <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary-dark font-bold">A</div>
+                <div>
+                    <div class="font-medium text-text-dark">Agung & Rona</div>
+                    <div class="text-xs">Family Account</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 md:p-10">
+        
+        <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold text-text-dark tracking-tight">Ringkasan Keuangan</h1>
+                <p class="text-text-light mt-1 text-sm">Monitor pengeluaran & sisa budget bulanan</p>
+            </div>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <div class="relative inline-block text-left" id="periodSelectorContainer">
+                <select id="periodSelect" class="appearance-none bg-white px-4 py-2 pr-10 rounded-lg border border-gray-100 shadow-sm text-text-light text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                    <option value="JANUARI" >Periode: 25 Jan - 24 Feb</option>
+                    <option value="FEBRUARI" selected>Periode: 25 Feb - 24 Mar</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-text-light">
+                    <i class="ri-arrow-down-s-line"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Card 1: Sisa -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <i class="ri-safe-2-fill text-6xl text-success"></i>
+                </div>
+                <div class="relative z-10">
+                    <div class="text-sm font-semibold text-text-light uppercase tracking-wider mb-1">Sisa Budget</div>
+                    <div class="text-3xl font-bold text-text-dark" id="sisaVal">Rp 0</div>
+                    <div class="mt-4 flex items-center gap-2 text-xs font-medium text-success bg-green-50 w-fit px-2 py-1 rounded-md" id="sisaBadge">
+                        <i class="ri-arrow-up-circle-fill"></i> ...
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Terpakai -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden group">
+                 <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <i class="ri-shopping-bag-3-fill text-6xl text-danger"></i>
+                </div>
+                <div class="relative z-10">
+                    <div class="text-sm font-semibold text-text-light uppercase tracking-wider mb-1">Terpakai</div>
+                    <div class="text-3xl font-bold text-text-dark" id="terpakaiVal">Rp 0</div>
+                    <div class="mt-4 flex items-center gap-2 text-xs font-medium text-danger bg-red-50 w-fit px-2 py-1 rounded-md" id="terpakaiBadge">
+                        <i class="ri-fire-fill"></i> ...
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Total Budget -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden group">
+                 <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <i class="ri-bank-card-fill text-6xl text-primary-dark"></i>
+                </div>
+                <div class="relative z-10">
+                    <div class="text-sm font-semibold text-text-light uppercase tracking-wider mb-1">Total Budget</div>
+                    <div class="text-3xl font-bold text-text-dark" id="budgetVal">Rp 0</div>
+                    <div class="mt-4 flex items-center gap-2 text-xs font-medium text-primary-dark bg-pink-50 w-fit px-2 py-1 rounded-md">
+                        <i class="ri-information-fill"></i> Fixed Allocation
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column: Chart -->
+            <div class="lg:col-span-2 bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100">
+                <h3 class="font-bold text-lg text-text-dark mb-6 flex items-center gap-2">
+                    <i class="ri-pie-chart-2-fill text-primary-dark"></i> Distribusi Pengeluaran
+                </h3>
+                <div class="relative h-64 md:h-80 w-full flex justify-center">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Right Column: Insight Nem -->
+            <div class="lg:col-span-1 space-y-6">
+                <!-- Insight Card -->
+                <div class="bg-gradient-to-br from-white to-pink-50 p-6 rounded-2xl shadow-sm border border-pink-100">
+                    <h3 class="font-bold text-lg text-primary-dark mb-4 flex items-center gap-2">
+                        <i class="ri-leaf-fill"></i> Insight Nem
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div class="p-4 bg-white/60 rounded-xl border border-pink-100/50 backdrop-blur-sm">
+                            <div class="text-xs font-bold text-text-light uppercase tracking-wide mb-1">Status Mingguan</div>
+                            <p class="text-sm text-text-dark leading-relaxed">
+                                Sisa budget Tuan menipis (<strong>Rp 125.700</strong>). Cukup untuk kebutuhan mendesak saja sebelum gajian. 🛡️
+                            </p>
+                        </div>
+
+                        <div class="p-4 bg-white/60 rounded-xl border border-pink-100/50 backdrop-blur-sm">
+                            <div class="text-xs font-bold text-text-light uppercase tracking-wide mb-1">Saran Hemat</div>
+                            <p class="text-sm text-text-dark leading-relaxed">
+                                Pengeluaran <strong>Makan</strong> sudah cukup tinggi. Masak di rumah bisa jadi solusi hemat sampai akhir periode! 🍳
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions Placeholder (Optional expansion) -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h3 class="font-bold text-base text-text-dark mb-4">Top Pengeluaran</h3>
+                    <div class="space-y-3">
+        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center"><i class="ri-restaurant-line"></i></div>
+                <span class="text-sm font-medium text-text-dark">Makan</span>
+            </div>
+            <span class="text-sm font-bold text-text-dark">Rp 855.800</span>
+        </div>
+        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center"><i class="ri-movie-line"></i></div>
+                <span class="text-sm font-medium text-text-dark">Hiburan</span>
+            </div>
+            <span class="text-sm font-bold text-text-dark">Rp 513.500</span>
+        </div>
+        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center"><i class="ri-bank-line"></i></div>
+                <span class="text-sm font-medium text-text-dark">Tabungan</span>
+            </div>
+            <span class="text-sm font-bold text-text-dark">Rp 200.000</span>
+        </div>
+        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center"><i class="ri-car-line"></i></div>
+                <span class="text-sm font-medium text-text-dark">Transportasi</span>
+            </div>
+            <span class="text-sm font-bold text-text-dark">Rp 100.000</span>
+        </div>
+        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center"><i class="ri-parking-box-line"></i></div>
+                <span class="text-sm font-medium text-text-dark">Parkir</span>
+            </div>
+            <span class="text-sm font-bold text-text-dark">Rp 5.000</span>
+        </div></div></div></div></div></div></div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- App Logic -->
+    <script src="js/app.js?v=4"></script>
+</body>
+</html>
