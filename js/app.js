@@ -84,23 +84,42 @@ async function updateDashboard(periodKey) {
     let insightStatus = '';
     let insightSaran = '';
 
+    // Dynamic Insight Logic
+    const topCatName = topCategory;
+    const isNewPeriod = data.totalSpent === 0 || (data.categories.length === 1 && data.categories[0].name === 'Tabungan');
+    
     if (data.sisa <= 0) {
         insightStatus = `Sisa budget Tuan sudah <strong>habis (Minus)</strong>. Mohon segera evaluasi pengeluaran. 🚨`;
-        insightSaran = `Kategori <strong>${topCategory}</strong> menyerap dana paling banyak. Stop pengeluaran non-essential. 🛑`;
-    } else if (data.sisa < 200000) {
+        insightSaran = `Kategori <strong>${topCatName}</strong> menyerap dana paling banyak. Stop pengeluaran non-essential. 🛑`;
+    } else if (data.sisa < 500000) {
         insightStatus = `Sisa budget Tuan menipis (<strong>${formatRp(data.sisa)}</strong>). Cukup untuk kebutuhan mendesak. 🛡️`;
-        insightSaran = `Pengeluaran <strong>${topCategory}</strong> cukup tinggi. Masak di rumah bisa jadi solusi hemat! 🍳`;
+        insightSaran = `Pengeluaran <strong>${topCatName}</strong> cukup tinggi. Masak di rumah bisa jadi solusi hemat! 🍳`;
+    } else if (isNewPeriod) {
+        insightStatus = `Periode baru dimulai! Saldo Tuan masih utuh (<strong>${formatRp(data.sisa)}</strong>). ✨`;
+        insightSaran = `Belum ada pengeluaran signifikan. Saat yang tepat untuk menabung lebih awal! 💰`;
     } else {
-        insightStatus = `Sisa budget Tuan masih aman (<strong>${formatRp(data.sisa)}</strong>). 🥂`;
-        insightSaran = `Teruskan pola hemat Tuan. Kategori <strong>${topCategory}</strong> masih mendominasi. 📈`;
+        insightStatus = `Keuangan Tuan sehat! Sisa budget masih aman (<strong>${formatRp(data.sisa)}</strong>). 🥂`;
+        
+        // Context-aware advice
+        if (topCatName === 'Makan') {
+            insightSaran = `Kategori <strong>Makan</strong> mendominasi. Coba kurangi jajan di luar minggu depan ya Tuan. 🥗`;
+        } else if (topCatName === 'Hiburan') {
+            insightSaran = `Wah, <strong>Hiburan</strong> jadi top pengeluaran. Ingat target tabungan nikah Tuan! 🎬`;
+        } else if (topCatName === 'Tabungan') {
+            insightSaran = `Mantap! <strong>Tabungan</strong> jadi prioritas utama. Pertahankan disiplin ini Tuan! 💎`;
+        } else {
+            insightSaran = `Pengeluaran terbesar di <strong>${topCatName}</strong>. Pastikan tetap sesuai rencana anggaran ya. 📝`;
+        }
     }
     
     // Helper to update insight text safely
     const updateInsight = (titleText, contentHtml) => {
         const titles = Array.from(document.querySelectorAll('.text-xs.font-bold.text-text-light'));
-        const targetTitle = titles.find(el => el.textContent.includes(titleText));
+        const targetTitle = titles.find(el => el.textContent.trim().toUpperCase() === titleText.toUpperCase());
         if (targetTitle && targetTitle.nextElementSibling) {
             targetTitle.nextElementSibling.innerHTML = contentHtml;
+        } else {
+             console.warn("Could not find insight title element for:", titleText);
         }
     };
 
